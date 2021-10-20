@@ -4,7 +4,6 @@ using DG.Tweening;
 
 public class Weapon : MonoBehaviour
 {
-
     #region Fields
     [Header("Bullet")]
     [SerializeField] private GameObject bulletPrefab;
@@ -92,7 +91,7 @@ public class Weapon : MonoBehaviour
     private void ShotEffects()
     {
         VFX();
-        SFX();
+        //SFX();
         Shake();
     }
 
