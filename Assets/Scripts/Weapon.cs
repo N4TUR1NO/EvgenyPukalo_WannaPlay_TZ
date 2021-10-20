@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -23,9 +24,8 @@ public class Weapon : MonoBehaviour
     
     private GameObject _vfxShot;
     private GameObject _spawn;
-    
-    private GameObject[] _bulletsPool;
-    private int _bulletPoolPointer;
+
+    private Queue<GameObject> _bulletsPool;
     
     #endregion
    
@@ -42,14 +42,12 @@ public class Weapon : MonoBehaviour
 
     private void InitPool()
     {
-        _bulletPoolPointer = 0;
-        _bulletsPool       = new GameObject[poolSize];
-
-        for (int i = 0; i < _bulletsPool.Length; i++)
+        _bulletsPool       = new Queue<GameObject>();
+        for (int i = 0; i < poolSize; i++)
         {
             GameObject newBullet = Instantiate(bulletPrefab, transform, true);
             newBullet.SetActive(false);
-            _bulletsPool[i] = newBullet;
+            _bulletsPool.Enqueue(newBullet);
         }
     }
     
@@ -86,7 +84,7 @@ public class Weapon : MonoBehaviour
     {
         if (GameManager.CanShoot)
         {
-            LaunchBall();
+            LaunchBullet();
             ShotEffects();
         }
     }
@@ -122,17 +120,11 @@ public class Weapon : MonoBehaviour
                  .OnComplete(() => { transform.localPosition = weaponStartPosition; });
     }
     
-    private void LaunchBall()
+    private void LaunchBullet()
     {
-        while (true)
-        {
-            _bulletPoolPointer = (_bulletPoolPointer + 1) % _bulletsPool.Length;
-            if (!_bulletsPool[_bulletsPool.Length - 1 - _bulletPoolPointer].activeSelf)
-                break;
-        }
-
-        _bulletsPool[_bulletsPool.Length - 1 - _bulletPoolPointer].transform.position = _spawn.transform.position;
-        _bulletsPool[_bulletsPool.Length - 1 - _bulletPoolPointer].SetActive(true);
-        _bulletsPool[_bulletsPool.Length - 1 - _bulletPoolPointer].GetComponent<Rigidbody>().velocity = _spawn.transform.forward * bulletSpeed;
+        GameObject bullet = _bulletsPool.Dequeue();
+        bullet.transform.position = _spawn.transform.position;
+        bullet.SetActive(true);
+        bullet.GetComponent<Rigidbody>().velocity = _spawn.transform.forward * bulletSpeed;
     }
 }
