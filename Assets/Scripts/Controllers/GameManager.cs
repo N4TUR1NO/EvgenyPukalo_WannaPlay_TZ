@@ -18,38 +18,17 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region OnEnable/OnDisable
-
-    private void OnEnable()
-    {
-        RewindButton.ButtonClicked += StartRewind;
-    }
-
-    private void OnDisable()
-    {
-        RewindButton.ButtonClicked -= StartRewind;
-    }
-
-    #endregion
-
-    #region Init
-
-    #endregion
-
     public static void CubeWasTouch()
     {
         if (CanShoot)
         {
             CanShoot = false;
             CubeTouch?.Invoke();
-            _cubesCount = CubeTouch.GetInvocationList().Length;
+            if (CubeTouch != null) _cubesCount = CubeTouch.GetInvocationList().Length;
         }
     }
 
-    private static void StartRewind()
-    {
-        RewindStarted?.Invoke();
-    }
+    public static void StartRewind() => RewindStarted?.Invoke();
 
     public static void IncCubesAtRest()
     {

@@ -6,7 +6,6 @@ public class RewindButton : MonoBehaviour
 {
     #region Fields
     
-    public static event Action ButtonClicked;
     private GameObject _button;
 
     #endregion
@@ -35,19 +34,13 @@ public class RewindButton : MonoBehaviour
 
     private void TaskOnClick()
     {
-        ButtonClicked?.Invoke();
+        GameManager.StartRewind();
         HideButton();
     }
 
     #endregion
     
-    private void DisplayButton()
-    {
-        _button.SetActive(true);
-    }
-    
-    private void HideButton()
-    {
-        _button.SetActive(false);
-    }
+    private void DisplayButton() => _button.SetActive(true);
+
+    private void HideButton() => _button.SetActive(false);
 }

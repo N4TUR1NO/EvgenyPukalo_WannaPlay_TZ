@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour
 {
     private void OnEnable()
     {
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(1f).OnComplete(() => { gameObject.SetActive(false); });
+        Sequence deactivateSequence = DOTween.Sequence();
+        deactivateSequence.AppendInterval(1f).OnComplete(() => { gameObject.SetActive(false); });
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ public class Aim : MonoBehaviour
 
     #endregion
 
-    public static event PlayerController.WithVector2Parameter AimPositionChanged; 
+    public static event Action<Vector2> AimPositionChanged; 
     
     #region Init
     
@@ -33,16 +34,16 @@ public class Aim : MonoBehaviour
     
     private void OnEnable()
     {
-        PlayerController.PlayerClickedScreen  += SetOffset;
-        PlayerController.PlayerTouchingScreen += UpdatePosition;
-        PlayerController.PlayerReleasedScreen += DeactivateAim;
+        InputManager.OnTap  += SetOffset;
+        InputManager.OnDrag += UpdatePosition;
+        InputManager.OnRelease += DeactivateAim;
     }
 
     private void OnDisable()
     {
-        PlayerController.PlayerClickedScreen  -= SetOffset;
-        PlayerController.PlayerTouchingScreen -= UpdatePosition;
-        PlayerController.PlayerReleasedScreen -= DeactivateAim;
+        InputManager.OnTap  -= SetOffset;
+        InputManager.OnDrag -= UpdatePosition;
+        InputManager.OnRelease -= DeactivateAim;
     }
     
     #endregion
@@ -64,13 +65,7 @@ public class Aim : MonoBehaviour
         AimPositionChanged?.Invoke(_rect.position);
     }
 
-    private void DeactivateAim()
-    {
-        _image.enabled = false;
-    }
+    private void DeactivateAim() => _image.enabled = false;
 
-    private void ResetPosition()
-    {
-        _rect.position = new Vector2(_screenHeight / 2, _screenWidth / 2);
-    }
+    private void ResetPosition() => _rect.position = new Vector2(_screenHeight / 2, _screenWidth / 2);
 }

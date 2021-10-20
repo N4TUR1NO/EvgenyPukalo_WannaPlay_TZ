@@ -60,13 +60,13 @@ public class Weapon : MonoBehaviour
     private void OnEnable()
     {
         Aim.AimPositionChanged                += UpdateWeaponRotation;
-        PlayerController.PlayerReleasedScreen += Shot;
+        InputManager.OnRelease += Shot;
     }
 
     private void OnDisable()
     {
         Aim.AimPositionChanged                -= UpdateWeaponRotation;
-        PlayerController.PlayerReleasedScreen -= Shot;
+        InputManager.OnRelease -= Shot;
     }
     
     #endregion
@@ -93,8 +93,13 @@ public class Weapon : MonoBehaviour
 
     private void ShotEffects()
     {
-        #region vfx
+        VFX();
+        SFX();
+        Shake();
+    }
 
+    private void VFX()
+    {
         if (!_vfxShot.activeSelf)
         {
             _vfxShot.SetActive(true);
@@ -102,25 +107,21 @@ public class Weapon : MonoBehaviour
             seq.AppendInterval(0.2f)
                .OnComplete(() => { _vfxShot.SetActive(false); });
         }
-        
-        #endregion
+    }
 
-        #region sfx
-
+    private void SFX()
+    {
         if (sfxShot)
             AudioSource.PlayClipAtPoint(sfxShot, Vector3.zero);
+    }
 
-        #endregion
-
-        #region shake
-
+    private void Shake()
+    {
         Vector3 weaponStartPosition = transform.localPosition;
         transform.DOShakePosition(duration, Vector3.one * power)
                  .OnComplete(() => { transform.localPosition = weaponStartPosition; });
-        
-        #endregion
     }
-
+    
     private void LaunchBall()
     {
         while (true)

@@ -5,8 +5,6 @@ public class TimeCube : MonoBehaviour
 {
 	#region Fields
 	
-	//[SerializeField] private float recordTime = 5f;
-	
 	private	bool _isRewinding;
 	private	bool _isRecording;
 	private	bool _isCubeAtRest;
@@ -80,11 +78,6 @@ public class TimeCube : MonoBehaviour
 	
 	private void Record ()
 	{
-		// if (_pointsInTime.Count > Mathf.Round(recordTime / Time.fixedDeltaTime))
-		// {
-		// 	StopRecord();
-		// 	return;
-		// }
 		if (_rb.velocity == Vector3.zero && !_isCubeAtRest)
 		{
 			GameManager.IncCubesAtRest();
@@ -115,10 +108,7 @@ public class TimeCube : MonoBehaviour
 		_isRecording  = true;
 	}
 
-	private void StopRecord()
-	{
-		_isRecording = false;
-	}
+	private void StopRecord() => _isRecording = false;
 
 	#endregion
 	
