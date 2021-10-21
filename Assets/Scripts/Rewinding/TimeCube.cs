@@ -67,9 +67,9 @@ public class TimeCube : MonoBehaviour
 		} 
 		else
 		{
+			StopRewind();
 			transform.position = _startPointInTime.Position;
 			transform.rotation = _startPointInTime.Rotation;
-			StopRewind();
 
 			GameManager.CanShoot = true;
 		}
@@ -114,7 +114,7 @@ public class TimeCube : MonoBehaviour
 	
 	private void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.GetComponent<Bullet>())
+		if (other.gameObject.CompareTag("Bullet"))
 		{
 			GameManager.CubeWasTouch();
 		}

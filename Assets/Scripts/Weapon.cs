@@ -13,9 +13,6 @@ public class Weapon : MonoBehaviour
     [Header("Weapon Shake")] 
     [SerializeField] private float duration = 0.2f;
     [Range(0.01f, 0.1f)] [SerializeField] private float power = 0.03f;
-    
-    [Header("Sound")]
-    [SerializeField] private AudioClip sfxShot;
 
     [Header("Rotation")] 
     [SerializeField] private float angleOfYRotation;
@@ -44,7 +41,7 @@ public class Weapon : MonoBehaviour
         _bulletsPool       = new Queue<GameObject>();
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject newBullet = Instantiate(bulletPrefab, transform, true);
+            GameObject newBullet = Instantiate(bulletPrefab, transform.parent, true);
             newBullet.SetActive(false);
             _bulletsPool.Enqueue(newBullet);
         }
@@ -91,7 +88,6 @@ public class Weapon : MonoBehaviour
     private void ShotEffects()
     {
         VFX();
-        //SFX();
         Shake();
     }
 
@@ -105,13 +101,7 @@ public class Weapon : MonoBehaviour
                .OnComplete(() => { _vfxShot.SetActive(false); });
         }
     }
-
-    private void SFX()
-    {
-        if (sfxShot)
-            AudioSource.PlayClipAtPoint(sfxShot, Vector3.zero);
-    }
-
+    
     private void Shake()
     {
         Vector3 weaponStartPosition = transform.localPosition;
@@ -121,9 +111,23 @@ public class Weapon : MonoBehaviour
     
     private void LaunchBullet()
     {
+        //Take from the pool
         GameObject bullet = _bulletsPool.Dequeue();
         bullet.transform.position = _spawn.transform.position;
         bullet.SetActive(true);
         bullet.GetComponent<Rigidbody>().velocity = _spawn.transform.forward * bulletSpeed;
+        
+        //return to the pool
+        Sequence deactivateSequence = DOTween.Sequence();
+        deactivateSequence.AppendInterval(1f).OnComplete(() =>
+        {
+            bullet.SetActive(false);
+            AddToPool(bullet);
+        });
+    }
+
+    private void AddToPool(GameObject objectToAdd)
+    {
+        _bulletsPool.Enqueue(objectToAdd);
     }
 }
